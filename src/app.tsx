@@ -1,6 +1,7 @@
 import * as s from "solid-js"
 import * as x from "xstate"
-import {createImmutable} from "@solid-primitives/immutable"
+
+import {useActor, useMachine} from "./xstate"
 
 const text_machine = x.createMachine({
 	context: {
@@ -38,13 +39,8 @@ const text_machine = x.createMachine({
 	},
 })
 
-export const App: s.Component = () => {
-	const text_actor = x.createActor(text_machine).start()
-
-	const [snapshot, setSnapshot] = s.createSignal(text_actor.getSnapshot())
-	text_actor.subscribe(setSnapshot)
-
-	const state = createImmutable(snapshot) as any as ReturnType<typeof snapshot> // fun
+const App: s.Component = () => {
+	const [state, send] = useMachine(text_machine)
 
 	s.createEffect(() => {
 		console.log("context.value:", state.context.value)
@@ -61,23 +57,70 @@ export const App: s.Component = () => {
 
 	setTimeout(() => {
 		console.log('--- send: {type: "text.edit"}')
-		text_actor.send({type: "text.edit"})
+		send({type: "text.edit"})
 
 		console.log('--- send: {type: "text.change", value: "Hello"}')
-		text_actor.send({type: "text.change", value: "Hello"})
+		send({type: "text.change", value: "Hello"})
 
 		console.log('--- send: {type: "text.commit"}')
-		text_actor.send({type: "text.commit"})
+		send({type: "text.commit"})
 
 		console.log('--- send: {type: "text.edit"}')
-		text_actor.send({type: "text.edit"})
+		send({type: "text.edit"})
 
 		console.log('--- send: {type: "text.change", value: "Hello world"}')
-		text_actor.send({type: "text.change", value: "Hello world"})
+		send({type: "text.change", value: "Hello world"})
 
 		console.log('--- send: {type: "text.cancel"}')
-		text_actor.send({type: "text.cancel"})
+		send({type: "text.cancel"})
 	})
 
 	return "hello"
 }
+
+function ActorTest() {
+	const childMachine = x.createMachine({
+		id: "childMachine",
+		initial: "active",
+		states: {
+			active: {
+				on: {
+					FINISH: {actions: x.sendParent({type: "FINISH"})},
+				},
+			},
+		},
+	})
+	const machine = x.createMachine({
+		initial: "active",
+		invoke: {
+			id: "child",
+			src: childMachine,
+		},
+		states: {
+			active: {
+				on: {FINISH: "success"},
+			},
+			success: {},
+		},
+	})
+
+	const [machine_state] = useMachine(machine)
+
+	const [actor_state, send] = useActor(() => machine_state.children.child)
+
+	s.createEffect(() => {
+		console.log("machine_state.matches('success')", machine_state.matches("success"))
+	})
+
+	s.createEffect(() => {
+		console.log("actor_state.value", actor_state.value)
+	})
+
+	setTimeout(() => {
+		send({type: "FINISH"})
+	})
+
+	return "look at the console"
+}
+
+export default ActorTest
