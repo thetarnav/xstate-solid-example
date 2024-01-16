@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@solid-primitives/immutable':
-    specifier: ^1.0.4
-    version: 1.0.4(solid-js@1.8.11)
+    specifier: ^1.0.5
+    version: 1.0.5(solid-js@1.8.11)
   solid-js:
     specifier: ^1.8.11
     version: 1.8.11
@@ -697,8 +697,8 @@ packages:
     dev: true
     optional: true
 
-  /@solid-primitives/immutable@1.0.4(solid-js@1.8.11):
-    resolution: {integrity: sha512-9/P6giQ+vR+BShXZO9eXVHqxla5G9tqDuptutH+9EOIoQnwyKd+ybiKPhN3xGoXV4GMquymLCRrjo1SikXcycw==}
+  /@solid-primitives/immutable@1.0.5(solid-js@1.8.11):
+    resolution: {integrity: sha512-hgjct4JITpEdSf/ts8hchUei2P0ePfLOVjuAKj0VZl2+Wvlxqwyh3evTwdwk1mdyp2EYPiePPAUM23e7TvBbjw==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:

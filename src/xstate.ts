@@ -36,9 +36,11 @@ export function useMachine<TMachine extends x.AnyStateMachine>(
 	machine: TMachine,
 	options?: x.ActorOptions<TMachine>,
 ): UseMachineReturn<TMachine> {
-	const actor = x.createActor(machine, options)
+	const actor = x.createActor(machine, options).start()
+	s.onCleanup(() => actor.stop())
+
 	const [snapshot, setSnapshot] = s.createSignal(actor.getSnapshot())
 	actor.subscribe(setSnapshot)
-	s.onCleanup(() => actor.stop())
+
 	return [createImmutable(snapshot), actor.send, actor]
 }

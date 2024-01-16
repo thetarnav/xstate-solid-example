@@ -111,12 +111,15 @@ function ActorTest() {
 	s.createEffect(() => {
 		console.log("machine_state.matches('success')", machine_state.matches("success"))
 	})
-
+	s.createEffect(() => {
+		console.log("machine_state.value", machine_state.value)
+	})
 	s.createEffect(() => {
 		console.log("actor_state.value", actor_state.value)
 	})
 
 	setTimeout(() => {
+		console.log('--- send: {type: "FINISH"}')
 		send({type: "FINISH"})
 	})
 
