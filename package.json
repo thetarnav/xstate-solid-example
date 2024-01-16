@@ -1,0 +1,21 @@
+{
+  "name": "xstate-solid",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@solid-primitives/immutable": "^1.0.4",
+    "solid-js": "^1.8.11",
+    "xstate": "^5.5.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vite-plugin-solid": "^2.8.0"
+  }
+}
